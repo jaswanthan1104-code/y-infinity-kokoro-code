@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Y∞ · Kokoro Code</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Noto+Serif+JP:wght@600&display=swap" rel="stylesheet">
+<style>
+:root{color-scheme:dark;--bg:#0a0a0a;--card:#151215;--tx:#f4f1ee;--mut:#a79fa1;--red:#b0122b;--red2:#e0344f;--line:#2b2226;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-behavior:smooth;scroll-padding-top:60px}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--bg);z-index:10}
+nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;background:var(--bg);border-bottom:1px solid var(--line);display:flex;gap:4px;overflow-x:auto;padding:8px 10px}
+nav a{color:var(--mut);text-decoration:none;padding:8px 12px;border-radius:20px;white-space:nowrap;font-size:14px}
+nav a:active,nav a:hover{color:var(--tx);background:var(--line)}
+main{position:relative;z-index:1;max-width:640px;margin:0 auto;padding:0 18px 60px}
+section{padding:44px 0 8px}
+h1,h2{font-family:"Cormorant Garamond",Georgia,serif;font-weight:600;margin:0 0 8px;letter-spacing:.02em}
+h1{font-size:64px;line-height:1}h1 span,h2 span{color:var(--red2)}
+h2{font-size:32px}
+.tag{font-family:"Cormorant Garamond",Georgia,serif;font-size:22px;color:var(--tx);font-style:italic}
+.hero{text-align:center;padding:70px 0 30px}
+p{color:var(--mut);margin:8px 0}
+.btn{display:inline-block;background:var(--red);color:#fff;border:0;border-radius:12px;padding:13px 20px;font-size:16px;text-decoration:none;cursor:pointer}
+.btn.ghost{background:transparent;border:1px solid var(--line);color:var(--tx)}
+.btn:active{background:var(--red2)}
+input,textarea{width:100%;background:var(--card);color:var(--tx);border:1px solid var(--line);border-radius:12px;padding:13px;font:inherit;margin:8px 0}
+input:focus,textarea:focus{outline:2px solid var(--red);border-color:transparent}
+.card{background:var(--card);border:1px solid var(--line);border-left:3px solid var(--red);border-radius:12px;padding:14px;margin:10px 0}
+.tk{font:600 30px/1.3 "Noto Serif JP","Hiragino Mincho ProN","Yu Mincho","Noto Sans CJK JP",serif;letter-spacing:.04em}.tk i{color:var(--red2);font-style:normal}
+.m{font-size:17px;margin:2px 0 8px}
+.lb{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--red2)}
+.nd{color:var(--mut);font-style:italic}
+.row{display:flex;gap:8px;align-items:center}.row input{margin:0;width:90px;text-align:center}
+.row .btn{padding:10px 14px;font-size:14px}
+.ok{border-left-color:#d9d4d0}.warn{border-left-color:#c9a227}.no{border-left-color:#555}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+.chip{background:var(--card);color:var(--tx);border:1px solid var(--red);border-radius:20px;padding:9px 14px;font-size:15px;cursor:pointer}
+.chip:active{background:var(--red)}
+.note{border:1px dashed var(--line);border-radius:12px;padding:12px;color:var(--mut);font-size:14px}
+.p{position:fixed;top:-20px;background:var(--red);border-radius:150% 0 150% 0;opacity:.3;pointer-events:none;z-index:0;animation:f linear infinite}
+@keyframes f{to{transform:translate(50px,115vh) rotate(360deg)}}
+@media(prefers-reduced-motion:reduce){.p{display:none}}
+footer{text-align:center;color:var(--mut);font-size:13px;padding:30px 0}
+</style></head><body>
+<nav><a href="#home">Home</a><a href="#dictionary">Dictionary</a><a href="#decoder">Decoder</a><a href="#builder">Builder</a><a href="#about">About</a></nav>
+<main>
+<section id="home" class="hero">
+<h1>Y<span>∞</span></h1>
+<p class="tag">Hidden symbols. Unspoken feelings.</p>
+<p>Kokoro Code is a secret codebook for friendship, loyalty, memories and feelings.</p>
+<p style="margin-top:22px"><a class="btn" href="#dictionary">Open the Decoder Book</a></p>
+</section>
+
+<section id="dictionary">
+<h2>Code <span>Dictionary</span></h2>
+<p>All 18 verified tokens. Each token is the full symbol + number, such as 友07. The same number can belong to different symbols, so a number alone never has a meaning.</p>
+<input id="s" type="search" placeholder="Search meaning, number or symbol…" autocomplete="off">
+<p id="cnt"></p><div id="dict"></div>
+</section>
+
+<section id="decoder">
+<h2><span>Decoder</span></h2>
+<p>Paste a message. Separate tokens with a space. Only an exact symbol + number match is decoded.</p>
+<textarea id="q" rows="2" placeholder="Example: 友07・永∞"></textarea>
+<button class="btn" id="go">Decode</button>
+<div id="out"></div>
+</section>
+
+<section id="builder">
+<h2>Message <span>Builder</span></h2>
+<p>Tap tokens to build a message. Each one is a full verified token.</p>
+<div class="chips" id="chips"></div>
+<div class="card" id="msg"></div>
+<div class="row" style="gap:8px;flex-wrap:wrap"><button class="btn ghost" id="undo">Undo</button><button class="btn ghost" id="clr">Clear</button><button class="btn" id="cp">Copy message</button></div>
+<p id="cpn" role="status" style="color:var(--tx)"></p>
+</section>
+
+<section id="about">
+<h2>About <span>Kokoro Code</span></h2>
+<p>Kokoro Code is a custom-created symbolic system, made for Project Y∞. It is <b style="color:var(--tx)">not</b> a traditional Japanese cipher and not standard Japanese.</p>
+<p>The Japanese characters are real. The token combinations, the numbers and their meanings were created by us. Each code shows two things separately: the <b style="color:var(--tx)">Original Japanese</b> meaning, only where your book gives one, and the <b style="color:var(--tx)">Custom Kokoro Code</b> meaning.</p>
+<p>Number rule: a number alone never decides a meaning. The full token (symbol + number) does.</p>
+<p>This is a fun codebook, not strong encryption. Anyone with the book can decode your messages.</p>
+</section>
+<footer>PROJECT Y∞ · KOKORO CODE · MASTER KEY v1.0</footer>
+</main>
+<script>
+const E=[["07","Best friend","tomo = friend"],["01","You","kimi = you"],["02","Me / myself"],["13","Someone special"],["08","Everyone / our group"],["13","You are special to my heart","kokoro = heart/mind"],["21","Trust and loyalty"],["52","Romantic feelings / love","ai = love"],["77","A lasting bond","kizuna = bond/connection"],["39","Gratitude / thank you"],["14","Thinking of you"],["15","Missing you / longing"],["∞","Forever"],["00","Keep this secret"],["77","A promise"],["21","I will protect / stand by you"],["14","I will remember"],["00","End of message"]];
+const S=["友","君","我","人","皆","心","信","愛","絆","感","想","恋","永","秘","約","守","記","終"];
+let M=[];
+const $=id=>document.getElementById(id);
+const esc=t=>String(t).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const tok=i=>S[i]?S[i]+E[i][0]:"";
+function dict(){
+ const f=$("s").value.trim().toLowerCase();
+ $("cnt").textContent=E.length+" verified tokens";
+ $("dict").innerHTML=E.map((e,i)=>({e,i})).filter(({e,i})=>!f||(e[0]+" "+e[1]+" "+(e[2]||"")+" "+(S[i]||"")).toLowerCase().includes(f)).map(({e,i})=>
+ `<div class="card"><div class="tk">${S[i]?esc(S[i]):"<i>?</i>"}${esc(e[0])}</div>
+ <div class="lb">Custom Kokoro Code meaning</div><div class="m">${esc(e[1])}</div>
+ <div class="lb">Original Japanese</div><div class="m ${e[2]?"":"nd"}">${e[2]?esc(e[2]):"Not defined yet"}</div>
+ </div>`).join("")||'<p class="nd">No match.</p>';
+}
+function row(t,m,c){return `<div class="card ${c}"><div class="tk">${esc(t)}</div><div class="m">${m}</div></div>`}
+function decode(){
+ const ps=$("q").value.normalize("NFKC").split(/[\s\u30fb\u00b7\u2022\u22c5,\u3001|\u25a0]+/).map(t=>t.trim()).filter(Boolean),ms=[];let all=ps.length>0;
+ $("out").innerHTML=ps.map(p=>{
+  const i=E.findIndex((e,k)=>S[k]&&S[k]+e[0]===p);
+  if(i>=0){ms.push(E[i][1]);return row(p,esc(E[i][1]),"ok")}
+  all=false;
+  if(/^(\d+|∞)$/.test(p)){const c=E.filter(e=>e[0]===p);if(c.length)return row(p,"A number alone can’t be decoded. Codes with this number: "+c.map(e=>esc(e[1])).join(" / ")+". Add the symbol to make a full token.","warn")}
+  return row(p,"Not defined yet","no")}).join("")
+  +(all&&ms.length>1?`<div class="note">Meanings in order: ${ms.map(esc).join(" → ")}</div>`:"");
+}
+function chips(){
+ const v=E.map((e,i)=>i).filter(i=>S[i]);
+ $("chips").innerHTML=v.length?v.map(i=>`<button class="chip" onclick="add(${i})">${esc(tok(i))} · ${esc(E[i][1])}</button>`).join(""):'<div class="note">No verified codes yet. Add symbols in the Dictionary first.</div>';
+ M=M.filter(i=>S[i]);msg();
+}
+function add(i){M.push(i);msg()}
+function msg(){
+ $("cpn").textContent="";
+ $("msg").innerHTML=M.length?`<div class="tk">${M.map(i=>'<span style="white-space:nowrap">'+esc(tok(i))+'</span>').join("・<wbr>")}</div><p>${M.map(i=>esc(E[i][1])).join(" → ")}</p>`:'<span class="nd">Your message will appear here.</span>';
+}
+$("s").oninput=dict;$("go").onclick=decode;
+$("undo").onclick=()=>{M.pop();msg()};$("clr").onclick=()=>{M=[];msg()};
+$("cp").onclick=async()=>{if(!M.length){$("cpn").textContent="Build a message first.";return}const t=M.map(tok).join("・");try{await navigator.clipboard.writeText(t);$("cpn").textContent="Copied: "+t;$("cp").textContent="Copied ✓";setTimeout(()=>$("cp").textContent="Copy message",2000)}catch(e){$("cpn").textContent="Copy failed. Press and hold the message to copy it."}};
+for(let n=0;n<9;n++){const d=document.createElement("span"),z=7+Math.random()*7;d.className="p";d.style.cssText=`left:${Math.random()*95}%;width:${z}px;height:${z}px;animation-duration:${16+Math.random()*14}s;animation-delay:-${Math.random()*20}s`;document.body.appendChild(d)}
+dict();chips();
+</script></body></html>
